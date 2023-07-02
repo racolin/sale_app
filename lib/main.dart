@@ -17,11 +17,9 @@ import 'business_logic/repositories/cart_repository.dart';
 import 'business_logic/repositories/pos_repository.dart';
 import 'business_logic/repositories/product_repository.dart';
 import 'data/repositories/api/auth_api_repository.dart';
-import 'data/repositories/mock/auth_mock_repository.dart';
-import 'data/repositories/mock/cart_mock_repository.dart';
+import 'data/repositories/api/cart_api_repository.dart';
 import 'data/repositories/mock/pos_mock_repository.dart';
-import 'data/repositories/mock/product_mock_repository.dart';
-import 'presentation/app_router.dart';
+import 'data/repositories/api/product_api_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -123,10 +121,10 @@ class MyApp extends StatelessWidget {
                           return MultiRepositoryProvider(
                           providers: [
                             RepositoryProvider<ProductRepository>(
-                              create: (context) => ProductMockRepository(),
+                              create: (context) => ProductApiRepository(),
                             ),
                             RepositoryProvider<CartRepository>(
-                              create: (context) => CartMockRepository(),
+                              create: (context) => CartApiRepository(),
                             ),
                             RepositoryProvider<PosRepository>(
                               create: (context) => PosMockRepository(),

@@ -48,22 +48,7 @@ class _CartBodyState extends State<CartBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Lịch sử đơn hàng',
-          style: TextStyle(fontSize: 16),
-        ),
-        elevation: 0,
-        leading: IconButton(
-          splashRadius: 28,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.keyboard_arrow_left),
-        ),
-      ),
-      body: BlocBuilder<CartCubit, CartsState>(
+    return BlocBuilder<CartCubit, CartsState>(
         builder: (context, state) {
           switch (state.runtimeType) {
             case CartsLoaded:
@@ -127,8 +112,7 @@ class _CartBodyState extends State<CartBody> {
           }
           return Container();
         },
-      ),
-    );
+      );
   }
 
   Widget _getCarts(List<CartModel> carts, bool isSuccess) {

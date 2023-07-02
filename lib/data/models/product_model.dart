@@ -32,12 +32,11 @@ class ProductModel {
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
-    print(map);
     return ProductModel(
       id: map['id']!,
       name: map['name'] ?? txtUnknown,
       cost: map['cost'] ?? 0,
-      image: map['image'],
+      image: map['image'] ?? '',
       images: (map['images'] is List)
           ? (map['images'] as List).map<String>((e) => e as String).toList()
           : <String>[],

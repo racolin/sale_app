@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sale_app/data/models/product_category_model.dart';
 import 'package:sale_app/data/models/product_model.dart';
 import 'package:sale_app/data/models/response_model.dart';
 
@@ -9,7 +8,6 @@ import '../../business_logic/repositories/product_repository.dart';
 import '../../business_logic/states/product_state.dart';
 import '../../data/models/product_option_model.dart';
 import '../../exception/app_message.dart';
-import '../../presentation/res/strings/values.dart';
 import '../blocs/interval/interval_submit.dart';
 
 class ProductCubit extends Cubit<ProductState>
@@ -23,50 +21,34 @@ class ProductCubit extends Cubit<ProductState>
     _init();
   }
 
-  // base method: return response model, use to avoid repeat code.
-
-  // action method, change state and return AppMessage?, null when success
-
-  // get data method: return model if state is loaded, else return null
-
   void _init() async {
     emit(ProductLoading());
-    _repository.getOptions().then((resOption) {
-      if (resOption.type == ResponseModelType.success) {
-        var listOption = resOption.data;
-        _repository.gets().then((resProduct) {
-          if (resProduct.type == ResponseModelType.success) {
-            var list = resProduct.data;
-            Future.wait([
-              _repository.getCategories(),
-              _repository.getOptions(),
-              _repository.gets(),
-            ]).then((resList) {
-              var resCategory =
-                  (resList[0] as ResponseModel<List<ProductCategoryModel>>);
-              var resFavorite = (resList[1] as ResponseModel<List<String>>);
-              List<ProductCategoryModel> category = [];
-              List<String> favorite = [];
-              if (resCategory.type == ResponseModelType.success) {
-                category = resCategory.data;
-              }
-              if (resFavorite.type == ResponseModelType.success) {
-                favorite = resFavorite.data;
-              }
-              emit(ProductLoaded(
-                lists: [],
-                listOption: listOption,
-                listType: category,
-              ));
-            });
-          } else {
-            emit(ProductFailure(message: resProduct.message));
-          }
-        });
-      } else {
-        emit(ProductFailure(message: resOption.message));
+    var resOption = await _repository.getOptions();
+    if (resOption.type == ResponseModelType.failure) {
+      return emit(ProductFailure(message: resOption.message));
+    }
+    var options = resOption.data;
+
+    var resCategories = await _repository.getCategories();
+    if (resCategories.type == ResponseModelType.failure) {
+      return emit(ProductFailure(message: resCategories.message));
+    }
+    var categories = resCategories.data;
+
+    List<List<ProductModel>> lists = [];
+    for (var category in categories) {
+      var resList = await _repository.gets(categoryId: category.id);
+      if (resList.type == ResponseModelType.failure) {
+        return emit(ProductFailure(message: resList.message));
       }
-    });
+      lists.add(resList.data);
+    }
+
+    emit(ProductLoaded(
+      lists: lists,
+      listOption: options,
+      listType: categories,
+    ));
   }
 
   Future<AppMessage?> reloadData() async {

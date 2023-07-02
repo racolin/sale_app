@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/presentation/pages/body/cart_body.dart';
+import 'package:sale_app/presentation/res/dimen/dimens.dart';
 
 import '../pages/body/order_body.dart';
 import '../pages/body/product_body.dart';
@@ -56,7 +57,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(state.type.label),
+            title: Text(
+              state.type.label,
+              style: const TextStyle(
+                fontSize: fontLG,
+              ),
+            ),
           ),
           body: Builder(
             builder: (context) {

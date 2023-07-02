@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sale_app/presentation/pages/support/loading_page.dart';
 
 import '../../../business_logic/cubits/product_cubit.dart';
 import '../../../business_logic/states/product_state.dart';
@@ -8,8 +9,6 @@ import '../../../data/models/product_model.dart';
 import '../../widgets/product/product_widget.dart';
 
 class ProductBody extends StatefulWidget {
-  final int perRow = 4;
-  final int row = 2;
 
   const ProductBody({
     Key? key,
@@ -29,7 +28,7 @@ class _ProductBodyState extends State<ProductBody> {
           case ProductInitial:
             return const SizedBox();
           case ProductLoading:
-            return const SizedBox();
+            return const LoadingPage();
           case ProductLoaded:
             state as ProductLoaded;
             var listType = state.listType;
@@ -57,17 +56,14 @@ class _ProductBodyState extends State<ProductBody> {
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      // height: 22.5 + 4 * 2 + 12 = 42.5
       children: [
         const SizedBox(height: spaceSM),
         Padding(
-          // height: 22.5 + 4 * 2 = 30.5
           padding: const EdgeInsets.symmetric(
             vertical: spaceXXS,
             horizontal: spaceXS,
           ),
           child: Text(
-            // height: 18 * 1.25 = 22.5
             title,
             style: const TextStyle(
               height: 1.25,
@@ -81,7 +77,6 @@ class _ProductBodyState extends State<ProductBody> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => Padding(
-            // height: 116
             padding: const EdgeInsets.all(spaceXS),
             child: ProductWidget(
               // height: 100

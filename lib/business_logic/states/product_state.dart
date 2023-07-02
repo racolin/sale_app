@@ -85,7 +85,7 @@ class ProductLoaded extends ProductState {
       return [];
     }
 
-    return _lists[0];
+    return _lists[index];
   }
 
   ProductLoaded copyWith({

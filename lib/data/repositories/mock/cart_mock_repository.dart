@@ -50,6 +50,8 @@ class CartMockRepository extends CartRepository {
                   cost: 114000,
                   rate: Random().nextInt(5),
                   payType: 0,
+                  categoryId: DeliveryType.takeOut,
+                  time: DateTime.now(),
                   products: [
                     const CartProductModel(
                       id: 'cp1',

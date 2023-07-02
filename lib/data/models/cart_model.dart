@@ -18,7 +18,10 @@ class CartModel {
   final int payType;
   final int? given;
   final int cost;
+  final DateTime time;
   final int? rate;
+  final int? fee;
+  final DeliveryType categoryId;
   final String? phone;
   final String? voucherName;
   final String? username;
@@ -30,7 +33,10 @@ class CartModel {
     required this.payType,
     this.given,
     required this.cost,
+    required this.time,
+    required this.categoryId,
     this.rate,
+    this.fee,
     this.phone,
     this.voucherName,
     this.username,
@@ -43,7 +49,10 @@ class CartModel {
     int? payType,
     int? given,
     int? cost,
+    DeliveryType? categoryId,
+    DateTime? time,
     int? rate,
+    int? fee,
     String? phone,
     String? voucherName,
     String? username,
@@ -55,7 +64,10 @@ class CartModel {
       payType: payType ?? this.payType,
       given: given ?? this.given,
       cost: cost ?? this.cost,
+      time: time ?? this.time,
+      categoryId: categoryId ?? this.categoryId,
       rate: rate ?? this.rate,
+      fee: fee ?? this.fee,
       phone: phone ?? this.phone,
       voucherName: voucherName ?? this.voucherName,
       username: username ?? this.username,
@@ -70,7 +82,9 @@ class CartModel {
       'payType': payType,
       'given': given,
       'cost': cost,
+      'time': time.millisecondsSinceEpoch,
       'rate': rate,
+      'fee': fee,
       'phone': phone,
       'voucherName': voucherName,
       'username': username,
@@ -83,12 +97,15 @@ class CartModel {
       id: map['id'] as String,
       name: map['name'] as String,
       payType: map['payType'] as int,
-      given: map['given'] as int,
+      given: map['given'],
       cost: map['cost'] as int,
-      rate: map['rate'] as int,
-      phone: map['phone'] as String,
-      voucherName: map['voucherName'] as String,
-      username: map['username'] as String,
+      time: DateTime.fromMillisecondsSinceEpoch(map['time'] ?? 0),
+      rate: map['rate'],
+      fee: map['fee'],
+      phone: map['phone'],
+      categoryId: DeliveryType.values[map['categoryId']!],
+      voucherName: map['voucherName'],
+      username: map['username'],
       products: (map['products'] as List)
           .map(
             (e) => CartProductModel.fromMap(e),
