@@ -161,6 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: TextField(
                             keyboardType: TextInputType.name,
+                            obscureText: true,
                             style: Theme.of(context).textTheme.bodyLarge,
                             onChanged: (value) {
                               _password = value;

@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sale_app/business_logic/cubits/auth_cubit.dart';
+import 'package:sale_app/presentation/app_router.dart';
+import 'package:sale_app/presentation/dialogs/app_dialog.dart';
 import 'package:sale_app/presentation/pages/body/cart_body.dart';
 import 'package:sale_app/presentation/res/dimen/dimens.dart';
 
@@ -63,6 +67,39 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 fontSize: fontLG,
               ),
             ),
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    var res = await context.read<AuthCubit>().logout();
+                    if (mounted) {
+                      if (res != null) {
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (context) {
+                            return AppDialog(
+                              message: res!,
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: const Text('Đồng ý'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          AppRouter.auth,
+                          (route) => false,
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.logout)),
+            ],
           ),
           body: Builder(
             builder: (context) {
