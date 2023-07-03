@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/business_logic/cubits/cart_cubit.dart';
+import 'package:sale_app/data/models/pos_model.dart';
 import 'package:sale_app/presentation/bottom_sheet/product_bottom_sheet.dart';
 import 'package:sale_app/presentation/dialogs/app_dialog.dart';
 import 'package:sale_app/presentation/res/strings/values.dart';
 
+import '../../../business_logic/cubits/pos_cubit.dart';
 import '../../../business_logic/cubits/product_cubit.dart';
 import '../../../data/models/cart_model.dart';
 import '../../../data/models/product_model.dart';
@@ -45,9 +47,15 @@ class ProductWidget extends StatelessWidget {
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
           builder: (ctx) {
-            return BlocProvider<ProductCubit>.value(
-              value: BlocProvider.of<ProductCubit>(context),
-              child: ProductBottomSheet(product: model, isTemplate: isTemplate),
+            return BlocProvider<PosCubit>.value(
+              value: BlocProvider.of<PosCubit>(context),
+              child: BlocProvider<ProductCubit>.value(
+                value: BlocProvider.of<ProductCubit>(context),
+                child: ProductBottomSheet(
+                  product: model,
+                  isTemplate: isTemplate,
+                ),
+              ),
             );
           },
         );
@@ -113,41 +121,29 @@ class ProductWidget extends StatelessWidget {
                                 options.addAll(item.defaultSelect);
                               }
                             }
-
-                            var message = null;
-                                // context.read<CartCubit>().addProductToCart(
-                                //       CartProductModel(
-                                //         id: model.id,
-                                //         name: model.name,
-                                //         cost: model.cost,
-                                //         options: options,
-                                //         amount: 1,
-                                //         note: '',
-                                //       ),
-                                //     );
-                            if (message != null) {
-                              showCupertinoDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AppDialog(
-                                    message: message,
-                                    actions: [
-                                      CupertinoDialogAction(
-                                        child: const Text(txtConfirm),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).clearSnackBars();
+                            var r = context.read<PosCubit>().addProduct(
+                                  PosProductModel(
+                                    id: model.id,
+                                    name: model.name,
+                                    options: options,
+                                    amount: 1,
+                                    note: '',
+                                  ),
+                                );
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            if (r) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
                                     'Thêm sản phẩm vào đơn hàng thành công',
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Bạn chưa tạo đơn',
                                   ),
                                 ),
                               );

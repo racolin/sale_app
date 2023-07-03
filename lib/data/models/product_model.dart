@@ -1,3 +1,4 @@
+import 'package:sale_app/data/models/pos_model.dart';
 import 'package:sale_app/presentation/res/strings/values.dart';
 
 class ProductModel {
@@ -40,9 +41,9 @@ class ProductModel {
       images: (map['images'] is List)
           ? (map['images'] as List).map<String>((e) => e as String).toList()
           : <String>[],
-        optionIds: (map['optionIds'] is List)
-            ? (map['optionIds'] as List).map<String>((e) => e as String).toList()
-            : <String>[],
+      optionIds: (map['optionIds'] is List)
+          ? (map['optionIds'] as List).map<String>((e) => e as String).toList()
+          : <String>[],
       description: map['description'] ?? txtDefault,
     );
   }

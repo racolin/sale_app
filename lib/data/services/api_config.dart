@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class Environment {
   final String _base;
   final String _url;
@@ -6,8 +8,7 @@ class Environment {
     required String base,
     required String url,
   })  : _base = base,
-        _url = url
-  ;
+        _url = url;
 
   String get api => _url + _base;
 
@@ -20,7 +21,8 @@ class Environment {
   static Environment get _dev {
     _devInstance ??= Environment._(
       base: 'api/v1/',
-      url: 'http://127.0.0.1/',
+      // url: 'http://127.0.0.1/',
+      url: Platform.isAndroid ? 'http://10.0.2.2/' : 'http://127.0.0.1/',
     );
     return _devInstance!;
   }
@@ -53,7 +55,9 @@ class ApiRouter {
 
   // Cart
   static const String cartStatusAll = 'sale/cart-status';
+
   static String cartGetStates(String id) => '/sale/cart-status/$id';
+
   static String cartsByState(String id) => '/sale/cart-status/$id';
 
   // Order

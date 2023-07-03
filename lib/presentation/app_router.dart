@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/business_logic/cubits/pos_cubit.dart';
-import 'package:sale_app/business_logic/states/auth_state.dart';
-import 'package:sale_app/presentation/pages/support/alert_page.dart';
+import 'package:sale_app/presentation/pages/support/loading_page.dart';
+import 'package:sale_app/presentation/screens/qr_code_page.dart';
 
 import '../business_logic/cubits/product_cubit.dart';
 import '../business_logic/repositories/pos_repository.dart';
 import '../business_logic/repositories/product_repository.dart';
-import '../data/repositories/api/auth_api_repository.dart';
-import '../data/repositories/api/cart_api_repository.dart';
-import '../data/repositories/api/pos_api_repository.dart';
-import '../data/repositories/api/product_api_repository.dart';
-import '../data/repositories/mock/auth_mock_repository.dart';
 import '../data/repositories/mock/cart_mock_repository.dart';
 import '../data/repositories/mock/pos_mock_repository.dart';
 import '../data/repositories/mock/product_mock_repository.dart';
 import 'screens/splash_screen.dart';
-import '../business_logic/cubits/auth_cubit.dart';
 import '../business_logic/cubits/cart_cubit.dart';
-import '../business_logic/repositories/auth_repository.dart';
 import '../business_logic/repositories/cart_repository.dart';
 import '../business_logic/cubits/home_cubit.dart';
 import 'screens/login_screen.dart';
@@ -28,6 +21,7 @@ class AppRouter {
   static const String home = '/home';
   static const String splash = '/splash';
   static const String auth = '/auth';
+  static const String qrCode = '/qr_code';
 
   static Route<dynamic>? onGenerateAppRoute(
     RouteSettings settings,
@@ -93,6 +87,10 @@ class AppRouter {
           builder: (context) {
             return const LoginScreen();
           },
+        );
+      case qrCode:
+        return MaterialPageRoute(
+          builder: (context) => const QRViewExample(),
         );
     }
     return null;

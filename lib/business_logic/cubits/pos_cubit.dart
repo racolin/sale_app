@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/data/models/pos_model.dart';
+import 'package:sale_app/data/models/response_model.dart';
 import 'package:sale_app/exception/app_message.dart';
 
 import '../repositories/pos_repository.dart';
@@ -14,39 +15,135 @@ class PosCubit extends Cubit<PosState> {
           listPos: [],
         ));
 
-  Future createCart(int i) async {
-    if (i < state.listPos.length) {
+  bool addProduct(PosProductModel model) {
+    if (state.index != null &&
+        state.index! >= 0 &&
+        state.index! < state.listPos.length) {
+      var list = state.listPos;
+      var cur = state.currentPos!;
+      var i = cur.products.indexOf(model);
+      if (i == -1) {
+        print(cur.title);
+        print(cur.memberCode);
+        cur = cur.copyWith(products: cur.products + [model]);
+        print(cur.title);
+        print(cur.memberCode);
+        print('cur.memberCode');
+      } else {
+        cur = cur.copyWith(
+            products: cur.products.sublist(0, i) +
+                [
+                  cur.products[i].copyWith(
+                    amount: cur.products[i].amount + model.amount,
+                  )
+                ] +
+                cur.products.sublist(i + 1, cur.products.length));
+      }
+      var newList = list.sublist(0, state.index) +
+          [cur] +
+          list.sublist(state.index! + 1, state.listPos.length);
+      emit(state.copyWith(listPos: newList));
+      return true;
+    }
+    return false;
+  }
+
+  bool removeProduct(int index) {
+    if (state.index != null &&
+        state.index! >= 0 &&
+        state.index! < state.listPos.length) {
+      var list = state.listPos;
+      var cur = state.currentPos!;
+      cur = cur.copyWith(
+        products: cur.products.sublist(0, index) +
+            cur.products.sublist(index + 1, cur.products.length),
+      );
+      var newList = list.sublist(0, state.index) +
+          [cur] +
+          list.sublist(state.index! + 1, state.listPos.length);
+      emit(state.copyWith(listPos: newList));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> createCart() async {
+    var i = state.index;
+    if (i != null && i < state.listPos.length) {
       var pos = state.listPos[i];
-      if (pos.isEmpty()) {
-        _repository.createCart(
+      if (pos.isNotEmpty()) {
+        var res = await _repository.createCart(
           memberCode: pos.memberCode,
-          payType: pos.payType!,
-          products: pos.products!,
+          payType: pos.payType,
+          products: pos.products,
           voucherId: pos.voucherId,
         );
+
+        if (res.type == ResponseModelType.success) {
+          return true;
+        }
       } else {
         emit(
           state.copyWith(
             message: AppMessage(
               type: AppMessageType.error,
               title: 'Chưa đủ thông tin',
-              content: 'Không thể tạo đơn hàng vì chưa có đầu đủ thông tin!',
+              content: 'Không thể tạo đơn hàng vì chưa có đầy đủ thông tin!',
             ),
           ),
         );
       }
     }
+    return false;
   }
 
-  void addNewTab() {
-    emit(state.copyWith(listPos: state.listPos + [const PosModel()]));
+  List<PosModel> get list => state.listPos;
+
+  List<String> get names => state.names;
+
+  void addNewTab([String? title, bool isMember = true]) {
+    if (title == null || title.isEmpty) {
+      title = 'Vãng lai';
+    }
+    var i = names.length;
+    emit(
+      state.copyWith(
+        listPos: state.listPos +
+            [
+              PosModel(
+                memberCode: isMember ? title : null,
+                title: title,
+              ),
+            ],
+        index: i,
+      ),
+    );
+  }
+
+  void setIndex(int i) {
+    if (i >= 0 && i < list.length) {
+      emit(state.copyWith(index: i));
+    }
+  }
+
+  void removeCurrentTab() {
+    if (state.index != null) {
+      removeTab(state.index!);
+    }
   }
 
   void removeTab(int i) {
+    int? index = i;
     if (i < state.listPos.length) {
       var list = [...state.listPos];
       list.removeAt(i);
-      emit(PosState(listPos: list));
+      if (list.isEmpty) {
+        index = null;
+      } else if (i >= list.length) {
+        index = list.length - 1;
+        index = i >= 0 ? i : 0;
+      }
+      emit(PosState(listPos: list, index: index));
     } else {
       emit(
         state.copyWith(

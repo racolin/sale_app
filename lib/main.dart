@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/business_logic/cubits/auth_cubit.dart';
 import 'package:sale_app/business_logic/states/auth_state.dart';
+import 'package:sale_app/presentation/app_router.dart';
 import 'package:sale_app/presentation/pages/support/alert_page.dart';
 import 'package:sale_app/presentation/screens/home_screen.dart';
 import 'package:sale_app/presentation/screens/login_screen.dart';
@@ -18,6 +19,7 @@ import 'business_logic/repositories/pos_repository.dart';
 import 'business_logic/repositories/product_repository.dart';
 import 'data/repositories/api/auth_api_repository.dart';
 import 'data/repositories/api/cart_api_repository.dart';
+import 'data/repositories/api/pos_api_repository.dart';
 import 'data/repositories/mock/pos_mock_repository.dart';
 import 'data/repositories/api/product_api_repository.dart';
 
@@ -127,7 +129,7 @@ class MyApp extends StatelessWidget {
                               create: (context) => CartApiRepository(),
                             ),
                             RepositoryProvider<PosRepository>(
-                              create: (context) => PosMockRepository(),
+                              create: (context) => PosApiRepository(),
                             ),
                           ],
                           child: MultiBlocProvider(
@@ -170,6 +172,7 @@ class MyApp extends StatelessWidget {
                       );
                     },
                   ),
+                  onGenerateRoute: AppRouter.onGenerateAppRoute,
                 );
               },
             );

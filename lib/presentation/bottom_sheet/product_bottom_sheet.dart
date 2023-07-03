@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sale_app/business_logic/cubits/pos_cubit.dart';
 import 'package:sale_app/business_logic/cubits/product_cubit.dart';
 import 'package:sale_app/business_logic/states/product_state.dart';
+import 'package:sale_app/data/models/pos_model.dart';
 
 import '../../data/models/product_option_model.dart';
 import '../../data/models/product_model.dart';
@@ -294,6 +296,15 @@ class _ProductBottomSheetState extends State<ProductBottomSheet> {
                               ),
                             ),
                             onPressed: () async {
+                              context.read<PosCubit>().addProduct(
+                                    PosProductModel(
+                                      id: widget.product.id,
+                                      name: widget.product.name,
+                                      options: selected.getOptionsId(),
+                                      amount: amount,
+                                      note: note ?? '',
+                                    ),
+                                  );
                             },
                             label: Text(
                               numberToCurrency(amount * selected.cost, 'đ') +

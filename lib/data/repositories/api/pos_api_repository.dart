@@ -37,7 +37,7 @@ class PosApiRepository extends PosRepository {
       var raw = RawSuccessModel.fromMap(res.data);
       return ResponseModel<String>(
         type: ResponseModelType.success,
-        data: raw.data["id"],
+        data: raw.data["_id"],
       );
     } on DioError catch (ex) {
       if (ex.error is AppMessage) {
