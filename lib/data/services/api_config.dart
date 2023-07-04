@@ -45,21 +45,21 @@ class AppConfig {
 
 class ApiRouter {
   // Auth
-  static const String authLogin = '/sale/auth/login';
-  static const String authRefresh = '/sale/auth/refresh';
+  static const String authLogin = 'sale/auth/login';
+  static const String authRefresh = 'sale/auth/refresh';
 
   // Product
-  static String productAll(String id) => '/sale/product/$id';
-  static const String productCategoryAll = '/sale/category';
-  static const String productOptionAll = '/sale/product-option';
+  static String productAll(String id) => 'sale/product/$id';
+  static const String productCategoryAll = 'sale/category';
+  static const String productOptionAll = 'sale/product-option';
 
   // Cart
   static const String cartStatusAll = 'sale/cart-status';
 
-  static String cartGetStates(String id) => '/sale/cart-status/$id';
+  static String cartGetStates(String id) => 'sale/cart-status/$id';
 
-  static String cartsByState(String id) => '/sale/cart-status/$id';
+  static String cartsByState(String id) => 'sale/cart-status/$id';
 
   // Order
-  static const String cartCreate = '/sale/cart/create';
+  static const String cartCreate = 'sale/cart/create';
 }

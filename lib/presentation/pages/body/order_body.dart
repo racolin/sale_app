@@ -21,12 +21,19 @@ class OrderBody extends StatefulWidget {
 
 class _OrderBodyState extends State<OrderBody> {
   String _title = '';
+  String _error = '';
   final _controller = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PosCubit, PosState>(
       builder: (context, state) {
+        print(state.index);
+        print(state.listPos.length);
+        if (state.index != null) {
+          print(state.listPos[state.index!]);
+        }
+        print(state.listPos.map((e) => e.toMap()));
         return Column(
           children: [
             Row(
@@ -84,8 +91,10 @@ class _OrderBodyState extends State<OrderBody> {
                         },
                       );
                     } else {
-                      context.read<PosCubit>().addNewTab(_controller.text,
-                        true,);
+                      context.read<PosCubit>().addNewTab(
+                            _controller.text,
+                            true,
+                          );
                       _controller.clear();
                       FocusScope.of(context).unfocus();
                     }
@@ -117,7 +126,7 @@ class _OrderBodyState extends State<OrderBody> {
                                         type: AppMessageType.success,
                                         title: 'Đặt hàng thành công!',
                                         content:
-                                        'Bạn có muốn xoá đơn hàng vừa mới đặt không?',
+                                            'Bạn có muốn xoá đơn hàng vừa mới đặt không?',
                                       ),
                                       actions: [
                                         CupertinoDialogAction(
@@ -126,13 +135,14 @@ class _OrderBodyState extends State<OrderBody> {
                                               Navigator.pop(context);
                                             }),
                                         CupertinoDialogAction(
-                                            child: const Text('Xoá'),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              context
-                                                  .read<PosCubit>()
-                                                  .removeCurrentTab();
-                                            }),
+                                          child: const Text('Xoá'),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            context
+                                                .read<PosCubit>()
+                                                .removeCurrentTab();
+                                          },
+                                        ),
                                       ],
                                     );
                                   },
@@ -141,8 +151,8 @@ class _OrderBodyState extends State<OrderBody> {
                                 ScaffoldMessenger.of(context).clearSnackBars();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text(
-                                        'Tạo đơn hàng không thành công!'),
+                                    content:
+                                        Text('Tạo đơn hàng không thành công!'),
                                   ),
                                 );
                               }
@@ -167,6 +177,7 @@ class _OrderBodyState extends State<OrderBody> {
                   context.read<PosCubit>().setIndex(i);
                 },
                 onAdd: () {
+                  _error = '';
                   showCupertinoDialog(
                     context: context,
                     builder: (ctx) {
@@ -175,7 +186,8 @@ class _OrderBodyState extends State<OrderBody> {
                         content: Column(
                           children: [
                             const Text(
-                                'Nếu không nhập tên thì tên mặc định là "Vãng lai"!'),
+                              '* Bạn phải nhập nhập tên của khách để phân biệt các thẻ.',
+                            ),
                             Material(
                               color: Colors.white10,
                               child: Stack(
@@ -199,7 +211,7 @@ class _OrderBodyState extends State<OrderBody> {
                                         _title = value;
                                       },
                                       decoration: const InputDecoration(
-                                        hintText: 'Vãng lai',
+                                        hintText: 'Tên của khách',
                                         isDense: true,
                                         contentPadding: EdgeInsets.zero,
                                         border: InputBorder.none,
@@ -209,6 +221,13 @@ class _OrderBodyState extends State<OrderBody> {
                                 ],
                               ),
                             ),
+                            if (_error.isNotEmpty)
+                              Text(
+                                _error,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
                           ],
                         ),
                         actions: [
@@ -221,8 +240,17 @@ class _OrderBodyState extends State<OrderBody> {
                           CupertinoDialogAction(
                             child: const Text('Tạo'),
                             onPressed: () {
-                              context.read<PosCubit>().addNewTab(_title, false);
-                              Navigator.pop(context);
+                              if (_title.isEmpty) {
+                                // setState(() {
+                                //   _error =
+                                //       '';
+                                // });
+                              } else {
+                                context
+                                    .read<PosCubit>()
+                                    .addNewTab(_title, false);
+                                Navigator.pop(context);
+                              }
                             },
                           ),
                         ],

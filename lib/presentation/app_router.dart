@@ -90,7 +90,7 @@ class AppRouter {
         );
       case qrCode:
         return MaterialPageRoute(
-          builder: (context) => const QRViewExample(),
+          builder: (context) => const QRCodePage(),
         );
     }
     return null;

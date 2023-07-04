@@ -7,16 +7,16 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../widgets/image_animation_scanner.dart';
 
-class QRViewExample extends StatefulWidget {
-  const QRViewExample({
+class QRCodePage extends StatefulWidget {
+  const QRCodePage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  State<StatefulWidget> createState() => _QRCodePageState();
 }
 
-class _QRViewExampleState extends State<QRViewExample>
+class _QRCodePageState extends State<QRCodePage>
     with SingleTickerProviderStateMixin {
   Barcode? result;
   QRViewController? controller;
@@ -176,15 +176,15 @@ class _QRViewExampleState extends State<QRViewExample>
                                 height: 24,
                               ),
                             ),
-                            const VerticalDivider(
-                              color: Colors.grey,
-                              thickness: 1,
-                            ),
-                            SvgPicture.asset(
-                              'assets/images/ic_image.svg',
-                              width: 24,
-                              height: 24,
-                            )
+                            // const VerticalDivider(
+                            //   color: Colors.grey,
+                            //   thickness: 1,
+                            // ),
+                            // SvgPicture.asset(
+                            //   'assets/images/ic_image.svg',
+                            //   width: 24,
+                            //   height: 24,
+                            // ),
                           ],
                         ),
                       ),

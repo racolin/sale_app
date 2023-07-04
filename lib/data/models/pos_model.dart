@@ -3,14 +3,14 @@ import 'package:sale_app/data/models/cart_model.dart';
 import '../../presentation/res/strings/values.dart';
 
 class PosModel {
-  final String? title;
+  final String? username;
   final String? memberCode;
   final String? voucherId;
   final int payType;
   final List<PosProductModel> products;
 
   const PosModel({
-    this.title,
+    this.username,
     this.memberCode,
     this.voucherId,
     this.payType = 0,
@@ -31,9 +31,9 @@ class PosModel {
     print(memberCode);
     print(title);
     print(this.memberCode);
-    print(this.title);
+    print(this.username);
     return PosModel(
-      title: title ?? this.title,
+      username: title ?? this.username,
       memberCode: memberCode ?? this.memberCode,
       voucherId: voucherId ?? this.voucherId,
       payType: payType ?? this.payType,
@@ -43,6 +43,7 @@ class PosModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'username': username,
       'memberCode': memberCode,
       'voucherId': voucherId,
       'payType': payType,

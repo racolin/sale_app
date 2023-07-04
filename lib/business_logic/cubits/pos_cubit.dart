@@ -23,10 +23,10 @@ class PosCubit extends Cubit<PosState> {
       var cur = state.currentPos!;
       var i = cur.products.indexOf(model);
       if (i == -1) {
-        print(cur.title);
+        print(cur.username);
         print(cur.memberCode);
         cur = cur.copyWith(products: cur.products + [model]);
-        print(cur.title);
+        print(cur.username);
         print(cur.memberCode);
         print('cur.memberCode');
       } else {
@@ -101,9 +101,9 @@ class PosCubit extends Cubit<PosState> {
 
   List<String> get names => state.names;
 
-  void addNewTab([String? title, bool isMember = true]) {
-    if (title == null || title.isEmpty) {
-      title = 'Vãng lai';
+  void addNewTab([String? username, bool isMember = true]) {
+    if (username == null || username.isEmpty) {
+      username = 'Vãng lai';
     }
     var i = names.length;
     emit(
@@ -111,13 +111,14 @@ class PosCubit extends Cubit<PosState> {
         listPos: state.listPos +
             [
               PosModel(
-                memberCode: isMember ? title : null,
-                title: title,
+                memberCode: isMember ? username : null,
+                username: username,
               ),
             ],
         index: i,
       ),
     );
+    print(state.listPos.map((e) => e.toMap()));
   }
 
   void setIndex(int i) {
@@ -140,7 +141,7 @@ class PosCubit extends Cubit<PosState> {
       if (list.isEmpty) {
         index = null;
       } else if (i >= list.length) {
-        index = list.length - 1;
+        i = list.length - 1;
         index = i >= 0 ? i : 0;
       }
       emit(PosState(listPos: list, index: index));

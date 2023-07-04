@@ -15,7 +15,7 @@ class PosState {
 
   List<String> get names => listPos
       .map(
-        (e) => (e.title ?? 'Vãng lai'),
+        (e) => (e.username ?? 'Vãng lai'),
       )
       .toList();
 
