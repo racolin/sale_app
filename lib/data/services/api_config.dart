@@ -54,7 +54,8 @@ class ApiRouter {
   static const String productOptionAll = 'sale/product-option';
 
   // Cart
-  static const String cartStatusAll = 'sale/cart-status';
+  static const String cartStatus = 'sale/cart-status';
+  static const String cartEditStatus = 'sale/cart/status';
 
   static String cartGetStates(String id) => 'sale/cart-status/$id';
 

@@ -18,7 +18,7 @@ class CartApiRepository extends CartRepository {
   Future<ResponseModel<List<CartStatusModel>>> getStatuses() async {
     try {
       var res = await _dio.get(
-        ApiRouter.cartStatusAll,
+        ApiRouter.cartStatus,
       );
       var raw = RawSuccessModel.fromMap(res.data);
       return ResponseModel<List<CartStatusModel>>(
@@ -113,6 +113,62 @@ class CartApiRepository extends CartRepository {
       }
     } on Exception catch (ex) {
       return ResponseModel<MapEntry<int, List<CartModel>>>(
+        type: ResponseModelType.failure,
+        message: AppMessage(
+          title: txtErrorTitle,
+          type: AppMessageType.error,
+          content: 'Chưa phân tích được lỗi',
+          description: ex.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<ResponseModel<bool>> updateStatus({
+    required String id,
+    required String status,
+  }) async {
+
+    try {
+      var res = await _dio.patch(
+        ApiRouter.cartEditStatus,
+        data: {
+          'id': id,
+          'status': status,
+        },
+      );
+      var raw = RawSuccessModel.fromMap(res.data);
+
+      return ResponseModel<bool>(
+        type: ResponseModelType.success,
+        data: raw.success ?? false,
+      );
+    } on DioError catch (ex) {
+      if (ex.error is AppMessage) {
+        return ResponseModel<bool>(
+          type: ResponseModelType.failure,
+          message: ex.error,
+        );
+      } else {
+        var raw = RawFailureModel.fromMap(
+          ex.response?.data ??
+              {
+                'statusCode': 444,
+                'message': 'Không có dữ liệu trả về!',
+              },
+        );
+        return ResponseModel<bool>(
+          type: ResponseModelType.failure,
+          message: AppMessage(
+            type: AppMessageType.error,
+            title: raw.error ?? txtErrorTitle,
+            content: raw.message ?? 'Không có dữ liệu trả về!',
+          ),
+        );
+      }
+    } on Exception catch (ex) {
+      return ResponseModel<bool>(
         type: ResponseModelType.failure,
         message: AppMessage(
           title: txtErrorTitle,

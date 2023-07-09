@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sale_app/data/models/cart_status_model.dart';
 import 'package:sale_app/presentation/res/strings/values.dart';
 
 import '../../data/models/paging_model.dart';
@@ -20,14 +21,14 @@ class CartCubit extends Cubit<CartsState> {
         var statuses = res.data;
         if (statuses.isNotEmpty) {
           _repository
-              .gets(statusId: statuses[0].id, page: 1, limit: 20)
+              .gets(statusId: statuses[0].id, page: 1, limit: 10)
               .then((res) {
             if (res.type == ResponseModelType.success) {
               Map<String, PagingModel<CartModel>> listCarts = {};
               for (var e in statuses) {
                 listCarts[e.id] = PagingModel<CartModel>(
                   page: 1,
-                  limit: 20,
+                  limit: 10,
                   list: [],
                 );
               }
@@ -86,6 +87,85 @@ class CartCubit extends Cubit<CartsState> {
       }
     }
     return null;
+  }
+
+  String? getStatus(int i) {
+    if (state is! CartsLoaded) {
+      return null;
+    }
+    return (state as CartsLoaded).statuses[i].id;
+  }
+
+  List<CartStatusModel> getStatuses() {
+    if (state is! CartsLoaded) {
+      return [];
+    }
+    return (state as CartsLoaded).statuses;
+  }
+
+  Future<bool> updateStatus(String id, String status, String oldStatus) async {
+    var res = await _repository.updateStatus(id: id, status: status);
+
+    if (res.type == ResponseModelType.success) {
+      if (state is CartsLoaded) {
+        var state = this.state as CartsLoaded;
+        var statuses = state.statuses;
+
+        _repository
+            .gets(statusId: oldStatus, page: 1, limit: 10)
+            .then((res) {
+          if (res.type == ResponseModelType.success) {
+            Map<String, PagingModel<CartModel>> listCarts = {};
+            for (var e in statuses) {
+              listCarts[e.id] = PagingModel<CartModel>(
+                page: 1,
+                limit: 10,
+                list: [],
+              );
+            }
+            listCarts[oldStatus]?.next(res.data.value, res.data.key);
+
+            emit(
+              state.copyWith(listCarts: listCarts),
+            );
+          } else {
+            emit(CartsFailure(message: res.message));
+          }
+        });
+      }
+
+      return res.data;
+    }
+    return false;
+  }
+
+  List<CartStatusModel> getStatusesExcept(String id) {
+    if (state is! CartsLoaded) {
+      return [];
+    }
+    return (state as CartsLoaded).statuses.where((e) => e.id != id).toList();
+  }
+
+  Future<void> refresh(int selected) async {
+    if (state is CartsLoaded) {
+      var state = this.state as CartsLoaded;
+      var res = await _repository.gets(
+        statusId: state.statuses[selected].id,
+        page: 1,
+        limit: 10,
+      );
+
+      if (res.type == ResponseModelType.success) {
+        var list = state.listCarts;
+        list[state.statuses[selected].id] = PagingModel<CartModel>(
+          page: 1,
+          limit: 10,
+          list: [],
+        );
+        list[state.statuses[selected].id]?.next(res.data.value, res.data.key);
+        emit(state.copyWith(listCarts: list));
+      } else {}
+    }
   }
 
   bool hasNext(String id) {

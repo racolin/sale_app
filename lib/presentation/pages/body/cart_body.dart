@@ -16,33 +16,33 @@ class CartBody extends StatefulWidget {
 
 class _CartBodyState extends State<CartBody> {
   var selected = 0;
-  final ScrollController _controller = ScrollController();
+  // final ScrollController _controller = ScrollController();
   final listPosition = <double>[0, 0, 0];
 
   @override
   void initState() {
-    _controller.addListener(() {
-      listPosition[selected] = _controller.position.pixels;
-      if (_controller.position.atEdge) {
-        if (_controller.position.pixels == 0) {
-          // atTop
-        } else {
-          var state = context.read<CartCubit>().state;
-          if (state is CartsLoaded) {
-            String id = state.statuses[selected].id;
-            if (context.read<CartCubit>().hasNext(id)) {
-              context.read<CartCubit>().loadMore(id);
-            }
-          }
-        }
-      }
-    });
+    // _controller.addListener(() {
+    //   listPosition[selected] = _controller.position.pixels;
+    //   if (_controller.position.atEdge) {
+    //     if (_controller.position.pixels == 0) {
+    //       // atTop
+    //     } else {
+    //       var state = context.read<CartCubit>().state;
+    //       if (state is CartsLoaded) {
+    //         String id = state.statuses[selected].id;
+    //         if (context.read<CartCubit>().hasNext(id)) {
+    //           context.read<CartCubit>().loadMore(id);
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    // _controller.dispose();
     super.dispose();
   }
 
@@ -56,6 +56,7 @@ class _CartBodyState extends State<CartBody> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 8),
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.start,
                     alignment: WrapAlignment.start,
@@ -66,7 +67,7 @@ class _CartBodyState extends State<CartBody> {
                         Container(
                           margin: const EdgeInsets.symmetric(
                             horizontal: 4,
-                            vertical: 8,
+                            vertical: 4,
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(16),
@@ -77,7 +78,7 @@ class _CartBodyState extends State<CartBody> {
                               setState(() {
                                 selected = index;
                               });
-                              _controller.jumpTo(listPosition[selected]);
+                              // _controller.jumpTo(listPosition[selected]);
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -136,21 +137,27 @@ class _CartBodyState extends State<CartBody> {
         description: 'Chưa có dữ liệu',
       );
     }
-    return ListView.separated(
-      separatorBuilder: (context, index) => const Padding(
-        padding: EdgeInsets.only(left: 16),
-        child: Divider(
-          height: 1,
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<CartCubit>().refresh(selected);
+      },
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Divider(
+            height: 1,
+          ),
         ),
+        // controller: _controller,
+        itemBuilder: (context, index) => CartWidget(
+          statusId: context.read<CartCubit>().getStatus(selected),
+          model: carts[index],
+          onClick: () {
+          },
+          isSuccess: isSuccess,
+        ),
+        itemCount: carts.length,
       ),
-      controller: _controller,
-      itemBuilder: (context, index) => CartWidget(
-        model: carts[index],
-        onClick: () {
-        },
-        isSuccess: isSuccess,
-      ),
-      itemCount: carts.length,
     );
   }
 }

@@ -84,4 +84,10 @@ class CartMockRepository extends CartRepository {
       ),
     );
   }
+
+  @override
+  Future<ResponseModel<bool>> updateStatus({required String id, required String status}) {
+    // TODO: implement updateStatus
+    throw UnimplementedError();
+  }
 }
