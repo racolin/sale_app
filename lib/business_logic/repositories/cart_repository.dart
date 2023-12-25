@@ -9,10 +9,18 @@ abstract class CartRepository {
     int? limit,
   });
 
-  Future<ResponseModel<List<CartStatusModel>>> getStatuses();
+  ///
+  /// 0: mọi lúc, 1: trong ngày, 2: trong tuần, 3: trong tháng
+  ///
+  Future<ResponseModel<List<CartStatusModel>>> getStatuses({
+    int? page,
+    int? limit,
+    int? time,
+  });
 
   Future<ResponseModel<bool>> updateStatus({
     required String id,
+    String? employeeId,
     required String status,
   });
 }

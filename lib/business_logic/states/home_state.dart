@@ -3,6 +3,7 @@ import '../../presentation/res/strings/values.dart';
 enum HomeBodyType {
   order(txtOrder),
   product(txtProduct),
+  promotion(txtPromotion),
   cart(txtCart);
 
   final String label;

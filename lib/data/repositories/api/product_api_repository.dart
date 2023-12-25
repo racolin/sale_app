@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:sale_app/data/models/product_suggets_model.dart';
 
 import '../../../presentation/res/strings/values.dart';
+import '../../models/check_voucher_model.dart';
 import '../../models/raw_failure_model.dart';
 import '../../models/raw_success_model.dart';
+import '../../models/voucher_model.dart';
 import '../../services/api_client.dart';
 import '../../models/product_category_model.dart';
 import '../../models/product_model.dart';
@@ -157,6 +160,178 @@ class ProductApiRepository extends ProductRepository {
       }
     } on Exception catch (ex) {
       return ResponseModel<List<ProductModel>>(
+        type: ResponseModelType.failure,
+        message: AppMessage(
+          title: txtErrorTitle,
+          type: AppMessageType.error,
+          content: 'Chưa phân tích được lỗi',
+          description: ex.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<ResponseModel<List<CheckVoucherModel>>> checkVoucher({
+    String? userId,
+    required String voucherId,
+    required List<ProductSuggestModel> products,
+  }) async {
+    try {
+      var res = await _dioAuth.post(
+        ApiRouter.checkVoucher,
+        data: {
+          "userId": userId,
+          "voucherId": voucherId,
+          "products": products.map((e) => e.toMap()).toList(),
+        },
+      );
+      var raw = RawSuccessModel.fromMap(res.data);
+      return ResponseModel<List<CheckVoucherModel>>(
+        type: ResponseModelType.success,
+        data: (raw.data is List)
+            ? (raw.data as List)
+                .map((e) => CheckVoucherModel.fromMap(e))
+                .toList()
+            : [],
+      );
+    } on DioError catch (ex) {
+      if (ex.error is AppMessage) {
+        return ResponseModel<List<CheckVoucherModel>>(
+          type: ResponseModelType.failure,
+          message: ex.error,
+        );
+      } else {
+        var raw = RawFailureModel.fromMap(
+          ex.response?.data ??
+              {
+                'statusCode': 444,
+                'message': 'Không có dữ liệu trả về!',
+              },
+        );
+        return ResponseModel<List<CheckVoucherModel>>(
+          type: ResponseModelType.failure,
+          message: AppMessage(
+            type: AppMessageType.error,
+            title: raw.error ?? txtErrorTitle,
+            content: raw.message ?? 'Không có dữ liệu trả về!',
+          ),
+        );
+      }
+    } on Exception catch (ex) {
+      return ResponseModel<List<CheckVoucherModel>>(
+        type: ResponseModelType.failure,
+        message: AppMessage(
+          title: txtErrorTitle,
+          type: AppMessageType.error,
+          content: 'Chưa phân tích được lỗi',
+          description: ex.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<ResponseModel<List<VoucherModel>>> getAvailableVoucher({
+    String? userId,
+  }) async {
+    try {
+      var res = await _dioAuth.get(
+        ApiRouter.getAvailableVoucher,
+        queryParameters: {
+          "userId": userId,
+        },
+      );
+      var raw = RawSuccessModel.fromMap(res.data);
+      return ResponseModel<List<VoucherModel>>(
+        type: ResponseModelType.success,
+        data: (raw.data is List)
+            ? (raw.data as List).map((e) => VoucherModel.fromMap(e)).toList()
+            : [],
+      );
+    } on DioError catch (ex) {
+      if (ex.error is AppMessage) {
+        return ResponseModel<List<VoucherModel>>(
+          type: ResponseModelType.failure,
+          message: ex.error,
+        );
+      } else {
+        var raw = RawFailureModel.fromMap(
+          ex.response?.data ??
+              {
+                'statusCode': 444,
+                'message': 'Không có dữ liệu trả về!',
+              },
+        );
+        return ResponseModel<List<VoucherModel>>(
+          type: ResponseModelType.failure,
+          message: AppMessage(
+            type: AppMessageType.error,
+            title: raw.error ?? txtErrorTitle,
+            content: raw.message ?? 'Không có dữ liệu trả về!',
+          ),
+        );
+      }
+    } on Exception catch (ex) {
+      return ResponseModel<List<VoucherModel>>(
+        type: ResponseModelType.failure,
+        message: AppMessage(
+          title: txtErrorTitle,
+          type: AppMessageType.error,
+          content: 'Chưa phân tích được lỗi',
+          description: ex.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<ResponseModel<List<CheckVoucherModel>>> getSuggestVoucher({
+    String? userId,
+    required List<ProductSuggestModel> products,
+  }) async {
+    try {
+      var res = await _dioAuth.post(
+        ApiRouter.suggestVoucher,
+        data: {
+          "userId": userId,
+          "products": products.map((e) => e.toMap()).toList(),
+        },
+      );
+      var raw = RawSuccessModel.fromMap(res.data);
+      return ResponseModel<List<CheckVoucherModel>>(
+        type: ResponseModelType.success,
+        data: (raw.data is List)
+            ? (raw.data as List)
+                .map((e) => CheckVoucherModel.fromMap(e))
+                .toList()
+            : [],
+      );
+    } on DioError catch (ex) {
+      if (ex.error is AppMessage) {
+        return ResponseModel<List<CheckVoucherModel>>(
+          type: ResponseModelType.failure,
+          message: ex.error,
+        );
+      } else {
+        var raw = RawFailureModel.fromMap(
+          ex.response?.data ??
+              {
+                'statusCode': 444,
+                'message': 'Không có dữ liệu trả về!',
+              },
+        );
+        return ResponseModel<List<CheckVoucherModel>>(
+          type: ResponseModelType.failure,
+          message: AppMessage(
+            type: AppMessageType.error,
+            title: raw.error ?? txtErrorTitle,
+            content: raw.message ?? 'Không có dữ liệu trả về!',
+          ),
+        );
+      }
+    } on Exception catch (ex) {
+      return ResponseModel<List<CheckVoucherModel>>(
         type: ResponseModelType.failure,
         message: AppMessage(
           title: txtErrorTitle,

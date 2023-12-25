@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:sale_app/data/models/employee_model.dart';
 
 import '../../../business_logic/repositories/pos_repository.dart';
 import '../../../presentation/res/strings/values.dart';
@@ -17,6 +18,7 @@ class PosApiRepository extends PosRepository {
   Future<ResponseModel<String>> createCart({
     String? memberCode,
     String? voucherId,
+    String? employeeId,
     required int payType,
     required List<PosProductModel> products,
   }) async {
@@ -25,7 +27,8 @@ class PosApiRepository extends PosRepository {
         ApiRouter.cartCreate,
         data: {
           'memberCode': memberCode,
-          if (voucherId != null )'voucherId': voucherId,
+          if (voucherId != null) 'voucherId': voucherId,
+          'employeeId': employeeId,
           'payType': payType,
           'products': products
               .map(
@@ -64,6 +67,53 @@ class PosApiRepository extends PosRepository {
       }
     } on Exception catch (ex) {
       return ResponseModel<String>(
+        type: ResponseModelType.failure,
+        message: AppMessage(
+          title: txtErrorTitle,
+          type: AppMessageType.error,
+          content: 'Chưa phân tích được lỗi',
+          description: ex.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<ResponseModel<List<EmployeeModel>>> getEmployees() async {
+    try {
+      var res = await _dio.get(ApiRouter.getEmployees);
+      var raw = RawSuccessModel.fromMap(res.data);
+      return ResponseModel<List<EmployeeModel>>(
+        type: ResponseModelType.success,
+        data: (raw.data is List)
+            ? (raw.data as List).map((e) => EmployeeModel.fromMap(e)).toList()
+            : [],
+      );
+    } on DioError catch (ex) {
+      if (ex.error is AppMessage) {
+        return ResponseModel<List<EmployeeModel>>(
+          type: ResponseModelType.failure,
+          message: ex.error,
+        );
+      } else {
+        var raw = RawFailureModel.fromMap(
+          ex.response?.data ??
+              {
+                'statusCode': 444,
+                'message': 'Không có dữ liệu trả về!',
+              },
+        );
+        return ResponseModel<List<EmployeeModel>>(
+          type: ResponseModelType.failure,
+          message: AppMessage(
+            type: AppMessageType.error,
+            title: raw.error ?? txtErrorTitle,
+            content: raw.message ?? 'Không có dữ liệu trả về!',
+          ),
+        );
+      }
+    } on Exception catch (ex) {
+      return ResponseModel<List<EmployeeModel>>(
         type: ResponseModelType.failure,
         message: AppMessage(
           title: txtErrorTitle,

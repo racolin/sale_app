@@ -305,6 +305,7 @@ class _ProductBottomSheetState extends State<ProductBottomSheet> {
                                       note: note ?? '',
                                     ),
                                   );
+                              Navigator.pop(context);
                             },
                             label: Text(
                               numberToCurrency(amount * selected.cost, 'đ') +

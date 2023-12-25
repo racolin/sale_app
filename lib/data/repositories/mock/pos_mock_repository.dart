@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:sale_app/data/models/employee_model.dart';
+
 import '../../../business_logic/repositories/cart_repository.dart';
 import '../../../business_logic/repositories/pos_repository.dart';
 import '../../models/cart_model.dart';
@@ -13,6 +15,7 @@ class PosMockRepository extends PosRepository {
   Future<ResponseModel<String>> createCart({
     String? memberCode,
     String? voucherId,
+    String? employeeId,
     required int payType,
     required List<PosProductModel> products,
   }) async {
@@ -29,5 +32,11 @@ class PosMockRepository extends PosRepository {
         content: 'Gặp sự cố khi tạo đơn hàng',
       ),
     );
+  }
+
+  @override
+  Future<ResponseModel<List<EmployeeModel>>> getEmployees() {
+    // TODO: implement getEmployees
+    throw UnimplementedError();
   }
 }

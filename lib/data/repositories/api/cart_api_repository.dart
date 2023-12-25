@@ -15,10 +15,19 @@ class CartApiRepository extends CartRepository {
   final _dio = ApiClient.dioAuth;
 
   @override
-  Future<ResponseModel<List<CartStatusModel>>> getStatuses() async {
+  Future<ResponseModel<List<CartStatusModel>>> getStatuses({
+    int? page,
+    int? limit,
+    int? time,
+  }) async {
     try {
       var res = await _dio.get(
         ApiRouter.cartStatus,
+        queryParameters: {
+          'page': page,
+          'limit': limit,
+          'time': time,
+        },
       );
       var raw = RawSuccessModel.fromMap(res.data);
       return ResponseModel<List<CartStatusModel>>(
@@ -128,6 +137,7 @@ class CartApiRepository extends CartRepository {
   Future<ResponseModel<bool>> updateStatus({
     required String id,
     required String status,
+    String? employeeId,
   }) async {
 
     try {
@@ -136,6 +146,7 @@ class CartApiRepository extends CartRepository {
         data: {
           'id': id,
           'status': status,
+          'employeeId': employeeId,
         },
       );
       var raw = RawSuccessModel.fromMap(res.data);

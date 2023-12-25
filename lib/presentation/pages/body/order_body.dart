@@ -10,6 +10,7 @@ import '../../../business_logic/cubits/pos_cubit.dart';
 import '../../../business_logic/states/pos_state.dart';
 import '../../app_router.dart';
 import '../../res/dimen/dimens.dart';
+import '../../widgets/employee_widget.dart';
 import '../../widgets/pos_widget.dart';
 
 class OrderBody extends StatefulWidget {
@@ -258,6 +259,27 @@ class _OrderBodyState extends State<OrderBody> {
                     },
                   );
                 },
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: state.employees
+                      .map(
+                        (e) => EmployeeWidget(
+                          onClick: () {
+                            context.read<PosCubit>().setEmployee(e.id);
+                          },
+                          model: e,
+                          isSelected: context.read<PosCubit>().isSelected(e.id),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ),
           ],

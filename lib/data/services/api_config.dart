@@ -20,7 +20,7 @@ class Environment {
 
   static Environment get _dev {
     _devInstance ??= Environment._(
-      base: 'api/v1/',
+      base: 'api/v2/',
       // url: 'http://127.0.0.1/',
       url: Platform.isAndroid ? 'http://10.0.2.2/' : 'http://127.0.0.1/',
     );
@@ -60,7 +60,19 @@ class ApiRouter {
   static String cartGetStates(String id) => 'sale/cart-status/$id';
 
   static String cartsByState(String id) => 'sale/cart-status/$id';
+  static String getDetailCard(String id) => 'sale/cart/$id';
 
   // Order
   static const String cartCreate = 'sale/cart/create';
+
+  // Employee
+  static const String getEmployees = 'sale/employee';
+
+  // Voucher
+  static const String checkVoucher = 'sale/cart/check-voucher';
+  static const String suggestVoucher = 'sale/cart/suggest-voucher';
+  static const String getAvailableVoucher = 'sale/voucher/available';
+
+  // member
+  static const String searchMember = 'sale/member/search';
 }

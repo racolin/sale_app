@@ -7,9 +7,12 @@ import '../../models/cart_status_model.dart';
 import '../../models/response_model.dart';
 
 class CartMockRepository extends CartRepository {
-
   @override
-  Future<ResponseModel<List<CartStatusModel>>> getStatuses() async {
+  Future<ResponseModel<List<CartStatusModel>>> getStatuses({
+    int? page,
+    int? limit,
+    int? time,
+  }) async {
     return ResponseModel<List<CartStatusModel>>(
       type: ResponseModelType.success,
       data: [
@@ -86,7 +89,11 @@ class CartMockRepository extends CartRepository {
   }
 
   @override
-  Future<ResponseModel<bool>> updateStatus({required String id, required String status}) {
+  Future<ResponseModel<bool>> updateStatus({
+    required String id,
+    required String status,
+    String? employeeId,
+  }) {
     // TODO: implement updateStatus
     throw UnimplementedError();
   }

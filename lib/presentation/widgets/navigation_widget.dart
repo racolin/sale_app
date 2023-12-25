@@ -43,6 +43,11 @@ class _NavigationWidgetState extends State<NavigationWidget> {
           tooltip: txtProduct,
           label: txtProduct,
         ),
+        BottomNavigationBarItem( 
+          icon: Icon(Icons.confirmation_number_outlined),
+          tooltip: txtPromotion,
+          label: txtPromotion,
+        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart_outlined),
           tooltip: txtCart,

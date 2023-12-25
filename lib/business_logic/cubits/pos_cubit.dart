@@ -13,7 +13,21 @@ class PosCubit extends Cubit<PosState> {
       : _repository = repository,
         super(PosState(
           listPos: [],
-        ));
+          employees: [],
+        )) {
+    _repository.getEmployees().then((res) {
+      if (res.type == ResponseModelType.success) {
+        emit(state.copyWith(employees: res.data));
+      }
+    });
+  }
+
+  void setEmployee(String id) {
+    print(id);
+    emit(state.copyWith(employeeId: id));
+  }
+
+  bool isSelected(String id) => state.isSelected(id);
 
   bool addProduct(PosProductModel model) {
     if (state.index != null &&
@@ -77,6 +91,7 @@ class PosCubit extends Cubit<PosState> {
           payType: pos.payType,
           products: pos.products,
           voucherId: pos.voucherId,
+          employeeId: state.employeeId,
         );
 
         if (res.type == ResponseModelType.success) {
@@ -144,7 +159,7 @@ class PosCubit extends Cubit<PosState> {
         i = list.length - 1;
         index = i >= 0 ? i : 0;
       }
-      emit(PosState(listPos: list, index: index));
+      emit(PosState(listPos: list, index: index, employees: state.employees));
     } else {
       emit(
         state.copyWith(

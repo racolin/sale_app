@@ -15,27 +15,10 @@ class PayMethodBottomSheet extends StatelessWidget {
         image: 'https://static.mservice.io/img/logo-momo.png',
       ),
       PayMethod(
-        name: 'Thẻ ngân hàng',
-        type: PayMethodType.bank,
-        image:
-        'https://www.pngitem.com/pimgs/m/13-130625_credit-card-rewards-star-ratings-payment-icon-credit.png',
-      ),
-      PayMethod(
         name: 'Tiền mặt',
         type: PayMethodType.cash,
         image:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxVK2Ldio3wbcompe76GCOvyURqeR96FG-Ow&usqp=CAU',
-      ),
-      PayMethod(
-        name: 'ShopeePay',
-        type: PayMethodType.shopee,
-        image: 'https://www.siampay.com/en/images/shopeepay-img1.png',
-      ),
-      PayMethod(
-        name: 'ZaloPay',
-        type: PayMethodType.zalo,
-        image:
-        'https://sosanhdienthoai.net/wp-content/uploads/2022/04/thanh-toan-zalo-pay-la-gi-huong-dan-cach-thanh-toan-zalopay-thumb.jpg',
       ),
     ];
 
@@ -60,7 +43,7 @@ class PayMethodBottomSheet extends StatelessWidget {
                 style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
             ),
-            _getMethods(context, methods, payMethod ?? methods[2]),
+            _getMethods(context, methods, payMethod ?? methods[1]),
             Container(
               color: Colors.grey.withAlpha(30),
               height: 48,

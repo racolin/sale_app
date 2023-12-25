@@ -39,6 +39,22 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          splashRadius: spaceXL,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_outlined),
+        ),
+        title: Text(
+          'Tìm kiếm sản phẩm',
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ),
       body: BlocBuilder<IntervalBloc<ProductModel>, IntervalState>(
         builder: (context, state) {
           var list = <ProductModel>[];

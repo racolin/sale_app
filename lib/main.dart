@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
                   // localizationsDelegates: [LocalizationsDelegate],
                   title: 'Sale App',
                   theme: ThemeData(
+                    useMaterial3: false,
                     scaffoldBackgroundColor:
                         const Color.fromRGBO(244, 244, 244, 1),
                     textTheme: const TextTheme(
@@ -121,49 +122,52 @@ class MyApp extends StatelessWidget {
                           return const LoginScreen();
                         case AuthLogin:
                           return MultiRepositoryProvider(
-                          providers: [
-                            RepositoryProvider<ProductRepository>(
-                              create: (context) => ProductApiRepository(),
-                            ),
-                            RepositoryProvider<CartRepository>(
-                              create: (context) => CartApiRepository(),
-                            ),
-                            RepositoryProvider<PosRepository>(
-                              create: (context) => PosApiRepository(),
-                            ),
-                          ],
-                          child: MultiBlocProvider(
                             providers: [
-                              BlocProvider<HomeCubit>(
-                                create: (context) => HomeCubit(),
+                              RepositoryProvider<ProductRepository>(
+                                create: (context) => ProductApiRepository(),
                               ),
-                              BlocProvider<ProductCubit>(
-                                create: (context) => ProductCubit(
-                                  repository: RepositoryProvider.of<ProductRepository>(
-                                    context,
-                                  ),
-                                ),
+                              RepositoryProvider<CartRepository>(
+                                create: (context) => CartApiRepository(),
                               ),
-                              BlocProvider<CartCubit>(
-                                lazy: false,
-                                create: (context) => CartCubit(
-                                  repository: RepositoryProvider.of<CartRepository>(
-                                    context,
-                                  ),
-                                ),
-                              ),
-                              BlocProvider<PosCubit>(
-                                lazy: false,
-                                create: (context) => PosCubit(
-                                  repository: RepositoryProvider.of<PosRepository>(
-                                    context,
-                                  ),
-                                ),
+                              RepositoryProvider<PosRepository>(
+                                create: (context) => PosApiRepository(),
                               ),
                             ],
-                            child: const HomeScreen(),
-                          ),
-                        );
+                            child: MultiBlocProvider(
+                              providers: [
+                                BlocProvider<HomeCubit>(
+                                  create: (context) => HomeCubit(),
+                                ),
+                                BlocProvider<ProductCubit>(
+                                  create: (context) => ProductCubit(
+                                    repository: RepositoryProvider.of<
+                                        ProductRepository>(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                                BlocProvider<CartCubit>(
+                                  lazy: false,
+                                  create: (context) => CartCubit(
+                                    repository:
+                                        RepositoryProvider.of<CartRepository>(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                                BlocProvider<PosCubit>(
+                                  lazy: false,
+                                  create: (context) => PosCubit(
+                                    repository:
+                                        RepositoryProvider.of<PosRepository>(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              child: const HomeScreen(),
+                            ),
+                          );
                       }
                       return const AlertPage(
                         icon: Icon(Icons.ac_unit),

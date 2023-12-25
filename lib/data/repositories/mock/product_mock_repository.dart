@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:sale_app/data/models/check_voucher_model.dart';
+import 'package:sale_app/data/models/product_suggets_model.dart';
+import 'package:sale_app/data/models/voucher_model.dart';
 
 import '../../models/product_category_model.dart';
 import '../../models/product_model.dart';
@@ -241,4 +244,23 @@ class ProductMockRepository extends ProductRepository {
       ),
     );
   }
+
+  @override
+  Future<ResponseModel<List<CheckVoucherModel>>> checkVoucher({String? userId, required String voucherId, required List<ProductSuggestModel> products}) {
+    // TODO: implement checkVoucher
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ResponseModel<List<VoucherModel>>> getAvailableVoucher({String? userId}) {
+    // TODO: implement getAvailableVoucher
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ResponseModel<List<CheckVoucherModel>>> getSuggestVoucher({String? userId, required List<ProductSuggestModel> products}) {
+    // TODO: implement getSuggestVoucher
+    throw UnimplementedError();
+  }
+
 }

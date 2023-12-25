@@ -27,56 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
           margin: const EdgeInsets.only(top: 56),
           child: Column(
             children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    child: Image.asset(
-                      'assets/images/background_auth.jpg',
-                      height: 360,
-                      width: double.maxFinite,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.white,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        } else {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            AppRouter.home,
-                            (route) => false,
-                          );
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.cancel,
-                        color: Colors.grey,
-                        size: 32,
-                      ),
-                    ),
-                  ),
-                ],
+              ClipRRect(
+                child: Image.asset(
+                  'assets/images/background_auth.jpg',
+                  height: 360,
+                  width: double.maxFinite,
+                  fit: BoxFit.cover,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(spaceMD),

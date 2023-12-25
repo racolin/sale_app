@@ -47,6 +47,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<AppMessage?> logout() async {
     var res = await _repository.logout();
     if (res.type == ResponseModelType.success) {
+      emit(AuthNoLogin());
       return null;
     }
     return res.message;

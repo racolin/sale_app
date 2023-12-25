@@ -43,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       case HomeBodyType.product:
         body = const ProductBody();
         break;
+      case HomeBodyType.promotion:
+        body = const CartBody();
+        break;
       case HomeBodyType.cart:
         body = const CartBody();
         break;
@@ -88,12 +91,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               ],
                             );
                           },
-                        );
-                      } else {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          AppRouter.auth,
-                          (route) => false,
                         );
                       }
                     }

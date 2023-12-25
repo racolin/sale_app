@@ -44,9 +44,6 @@ class AppRouter {
                 RepositoryProvider<CartRepository>(
                   create: (context) => CartMockRepository(),
                 ),
-                RepositoryProvider<PosRepository>(
-                  create: (context) => PosMockRepository(),
-                ),
               ],
               child: MultiBlocProvider(
                 providers: [
@@ -64,14 +61,6 @@ class AppRouter {
                     lazy: false,
                     create: (context) => CartCubit(
                       repository: RepositoryProvider.of<CartRepository>(
-                        context,
-                      ),
-                    ),
-                  ),
-                  BlocProvider<PosCubit>(
-                    lazy: false,
-                    create: (context) => PosCubit(
-                      repository: RepositoryProvider.of<PosRepository>(
                         context,
                       ),
                     ),
