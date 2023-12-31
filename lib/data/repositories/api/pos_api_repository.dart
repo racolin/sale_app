@@ -85,9 +85,23 @@ class PosApiRepository extends PosRepository {
       var raw = RawSuccessModel.fromMap(res.data);
       return ResponseModel<List<EmployeeModel>>(
         type: ResponseModelType.success,
-        data: (raw.data is List)
-            ? (raw.data as List).map((e) => EmployeeModel.fromMap(e)).toList()
-            : [],
+        data: [
+          const EmployeeModel(
+            id: '653bfe0bfa23d600a2c81e40',
+            name: 'Nguyễn Quang Vinh',
+            avatar:
+                'http://192.168.2.8:82/api/file/employee/bb1edc6c-ba28-4879-8e74-57ccd9f22753.jpg',
+          ),
+          const EmployeeModel(
+            id: '653bfe0bfa23d600a2181e40',
+            name: 'Phan Trung Tín',
+            avatar:
+                'https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg',
+          ),
+        ],
+        // (raw.data is List)
+        //     ? (raw.data as List).map((e) => EmployeeModel.fromMap(e)).toList()
+        //     : [],
       );
     } on DioError catch (ex) {
       if (ex.error is AppMessage) {

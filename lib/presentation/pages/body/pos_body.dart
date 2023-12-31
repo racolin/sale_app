@@ -1,26 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sale_app/exception/app_message.dart';
-import 'package:sale_app/presentation/dialogs/app_dialog.dart';
-import 'package:sale_app/presentation/pages/support/alert_page.dart';
-import 'package:sale_app/presentation/widgets/tabbar/tab_bar_widget.dart';
+import 'package:sale_app/business_logic/blocs/interval/interval_submit.dart';
+import 'package:sale_app/business_logic/repositories/member_repository.dart';
+import 'package:sale_app/data/models/member_model.dart';
 
+import '../../../business_logic/blocs/interval/interval_bloc.dart';
+import '../../../business_logic/cubits/member_cubit.dart';
 import '../../../business_logic/cubits/pos_cubit.dart';
 import '../../../business_logic/states/pos_state.dart';
+import '../../../data/repositories/api/member_api_repository.dart';
+import '../../../exception/app_message.dart';
 import '../../app_router.dart';
+import '../../dialogs/app_dialog.dart';
 import '../../res/dimen/dimens.dart';
+import '../../screens/member_search_screen.dart';
 import '../../widgets/employee_widget.dart';
 import '../../widgets/pos_widget.dart';
+import '../../widgets/tabbar/tab_bar_widget.dart';
+import '../support/alert_page.dart';
 
-class OrderBody extends StatefulWidget {
-  const OrderBody({Key? key}) : super(key: key);
+class PosBody extends StatefulWidget {
+  const PosBody({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<OrderBody> createState() => _OrderBodyState();
+  State<PosBody> createState() => _PosBodyState();
 }
 
-class _OrderBodyState extends State<OrderBody> {
+class _PosBodyState extends State<PosBody> {
   String _title = '';
   String _error = '';
   final _controller = TextEditingController(text: '');
@@ -29,12 +38,6 @@ class _OrderBodyState extends State<OrderBody> {
   Widget build(BuildContext context) {
     return BlocBuilder<PosCubit, PosState>(
       builder: (context, state) {
-        print(state.index);
-        print(state.listPos.length);
-        if (state.index != null) {
-          print(state.listPos[state.index!]);
-        }
-        print(state.listPos.map((e) => e.toMap()));
         return Column(
           children: [
             Row(
@@ -46,27 +49,33 @@ class _OrderBodyState extends State<OrderBody> {
                     color: Colors.white10,
                     child: Stack(
                       children: [
-                        Container(
-                          height: 48,
-                          width: double.maxFinite,
-                          margin: const EdgeInsets.symmetric(vertical: spaceSM),
-                          padding: const EdgeInsets.all(spaceSM),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(spaceXS),
-                            border: Border.all(
-                              color: Colors.black54,
-                              width: 0.5,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, AppRouter.memberSearch)
+                                .then((member) {
+                              if (member != null && member is MemberModel) {
+                                context
+                                    .read<PosCubit>()
+                                    .addNewTab(member.name, member.code);
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 48,
+                            width: double.maxFinite,
+                            margin:
+                                const EdgeInsets.symmetric(vertical: spaceSM),
+                            padding: const EdgeInsets.all(spaceSM),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(spaceXS),
+                              border: Border.all(
+                                color: Colors.black54,
+                                width: 0.5,
+                              ),
                             ),
-                          ),
-                          child: TextField(
-                            controller: _controller,
-                            keyboardType: TextInputType.name,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                            decoration: const InputDecoration(
-                              hintText: 'Member code',
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              border: InputBorder.none,
+                            child: Text(
+                              'Member code',
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
                         ),
@@ -85,16 +94,16 @@ class _OrderBodyState extends State<OrderBody> {
                         (value) async {
                           if (value != null) {
                             context.read<PosCubit>().addNewTab(
+                                  null,
                                   value as String,
-                                  true,
                                 );
                           }
                         },
                       );
                     } else {
                       context.read<PosCubit>().addNewTab(
+                            null,
                             _controller.text,
-                            true,
                           );
                       _controller.clear();
                       FocusScope.of(context).unfocus();
@@ -249,7 +258,7 @@ class _OrderBodyState extends State<OrderBody> {
                               } else {
                                 context
                                     .read<PosCubit>()
-                                    .addNewTab(_title, false);
+                                    .addNewTab(_title, null);
                                 Navigator.pop(context);
                               }
                             },
@@ -261,6 +270,7 @@ class _OrderBodyState extends State<OrderBody> {
                 },
               ),
             ),
+            const SizedBox(height: spaceSM),
             Container(
               color: Colors.white,
               width: double.maxFinite,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:sale_app/business_logic/cubits/home_cubit.dart';
-import 'package:sale_app/business_logic/states/home_state.dart';
 
 import '../../business_logic/cubits/pos_cubit.dart';
 import '../../business_logic/cubits/product_cubit.dart';
@@ -38,11 +36,11 @@ class _PosWidgetState extends State<PosWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(height: spaceXS),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 8),
                   _getProducts(context, widget.model.products),
                   const SizedBox(height: 8),
                   _getTotal(
@@ -171,34 +169,17 @@ class _PosWidgetState extends State<PosWidget> {
     setup(products);
     return Container(
       color: Colors.white,
+      width: double.maxFinite,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            title: const Text(
+          const Padding(
+            padding: EdgeInsets.all(spaceSM),
+            child: Text(
               'Sản phẩm đã chọn',
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-              ),
-            ),
-            trailing: TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Colors.orange.withAlpha(30),
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                // padding: MaterialStateProperty.all(EdgeInsets.zero),
-              ),
-              onPressed: () {
-                context.read<HomeCubit>().setBody(HomeBodyType.product);
-              },
-              child: const Text(
-                '+ Thêm',
-                style: TextStyle(fontSize: 12),
               ),
             ),
           ),
@@ -208,44 +189,9 @@ class _PosWidgetState extends State<PosWidget> {
               child: Slidable(
                 key: ValueKey(i),
                 endActionPane: ActionPane(
-                  extentRatio: 0.4,
+                  extentRatio: .2,
                   motion: const ScrollMotion(),
                   children: [
-                    CustomSlidableAction(
-                      padding: EdgeInsets.zero,
-                      onPressed: null,
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 12,
-                          right: 6,
-                          top: 2,
-                          bottom: 2,
-                        ),
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.edit_note_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            Text(
-                              'SỬA',
-                              style: TextStyle(
-                                fontSize: 8,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     CustomSlidableAction(
                       padding: EdgeInsets.zero,
                       onPressed: (context) {
@@ -254,15 +200,13 @@ class _PosWidgetState extends State<PosWidget> {
                         if (r) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content:
-                              Text('Xoá sản phẩm thành công!'),
+                              content: Text('Xoá sản phẩm thành công!'),
                             ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content:
-                              Text('Xoá sản phẩm không thành công!'),
+                              content: Text('Xoá sản phẩm không thành công!'),
                             ),
                           );
                         }
@@ -276,9 +220,9 @@ class _PosWidgetState extends State<PosWidget> {
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Column(
+                          child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.delete_forever,
                                 color: Colors.white,
@@ -333,6 +277,7 @@ class _PosWidgetState extends State<PosWidget> {
           (product.cost +
                   getCostOptions(
                     context,
+                    e.id,
                     e.options,
                   )) *
               e.amount,
@@ -341,8 +286,13 @@ class _PosWidgetState extends State<PosWidget> {
     }
   }
 
-  int getCostOptions(BuildContext context, List<String> options) {
+  int getCostOptions(
+    BuildContext context,
+    String productId,
+    List<String> options,
+  ) {
     return context.read<ProductCubit>().getCostOptionsItem(
+              productId,
               options,
             ) ??
         0;
@@ -464,7 +414,9 @@ class _PosWidgetState extends State<PosWidget> {
                           content: Text('Thêm khuyến mãi thành công!'),
                         ),
                       );
-                      context.read<PosCubit>().addNewTab(_controller.text,true);
+                      context
+                          .read<PosCubit>()
+                          .addNewTab(null, _controller.text);
                       // _controller.clear();
                       // FocusScope.of(context).unfocus();
                     }

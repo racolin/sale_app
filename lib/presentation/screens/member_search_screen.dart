@@ -2,33 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../business_logic/blocs/interval/interval_bloc.dart';
-import '../../data/models/product_model.dart';
+import '../../data/models/member_model.dart';
 import '../res/dimen/dimens.dart';
-import '../res/strings/values.dart';
-import '../widgets/product/product_widget.dart';
+import '../widgets/member_widget.dart';
 
-class ProductSearchScreen extends StatefulWidget {
-
-  const ProductSearchScreen({
+class MemberSearchScreen extends StatefulWidget {
+  const MemberSearchScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ProductSearchScreen> createState() => _ProductSearchScreenState();
+  State<MemberSearchScreen> createState() => _MemberSearchScreenState();
 }
 
-class _ProductSearchScreenState extends State<ProductSearchScreen> {
+class _MemberSearchScreenState extends State<MemberSearchScreen> {
   bool expanded = false;
 
   double oldPixel = 0;
   double gap = 2;
   double direction = -1;
-
-  @override
-  void initState() {
-    context.read<IntervalBloc<ProductModel>>().add(IntervalSearch(key: ''));
-    super.initState();
-  }
 
   void onScroll() {
     setState(() {
@@ -48,20 +40,21 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
           icon: const Icon(Icons.arrow_back_outlined),
         ),
         title: Text(
-          'Tìm kiếm sản phẩm',
+          'Tìm kiếm thành viên',
           style: Theme.of(context)
               .textTheme
               .titleSmall
               ?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
-      body: BlocBuilder<IntervalBloc<ProductModel>, IntervalState>(
+      body: BlocBuilder<IntervalBloc<MemberModel>, IntervalState>(
         builder: (context, state) {
-          var list = <ProductModel>[];
-          if (state is IntervalLoaded<ProductModel>) {
+          var list = <MemberModel>[];
+          if (state is IntervalLoaded<MemberModel>) {
             list = state.list;
           }
           return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _getSearchBar(context),
               Expanded(
@@ -85,18 +78,26 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
-                        child: ListView.builder(
+                        child: GridView.builder(
                           padding: const EdgeInsets.only(
                               top: spaceXXS, bottom: dimMD),
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.all(spaceXS),
-                              child: ProductWidget(
-                                model: list[index], onClick: () {  },
+                              child: MemberWidget(
+                                model: list[index],
+                                onClick: () {
+                                  Navigator.pop(context, list[index]);
+                                },
                               ),
                             );
                           },
                           itemCount: list.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 4,
+                          ),
                         ),
                       ),
                     ],
@@ -111,13 +112,12 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   }
 
   Widget _getSearchBar(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      margin: const EdgeInsets.only(top: dimMD),
-      padding: const EdgeInsets.all(spaceXS),
-      child: Row(
-        children: [
-          Expanded(
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(top: dimXXS),
+            padding: const EdgeInsets.all(spaceXS),
             child: TextField(
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.all(0),
@@ -130,35 +130,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
               style: Theme.of(context).textTheme.bodyLarge,
               onChanged: (value) {
                 context
-                    .read<IntervalBloc<ProductModel>>()
+                    .read<IntervalBloc<MemberModel>>()
                     .add(IntervalSearch(key: value));
               },
             ),
           ),
-          const SizedBox(
-            width: spaceXXS,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            borderRadius: BorderRadius.circular(spaceXS),
-            child: Container(
-              padding: const EdgeInsets.all(spaceXXS),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(spaceXS),
-              ),
-              child: const Text(
-                txtCancel,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        const Expanded(child: SizedBox()),
+      ],
     );
   }
 }

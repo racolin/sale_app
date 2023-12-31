@@ -15,7 +15,7 @@ class ProductOptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (model.minSelected > 0) {}
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [],
     );

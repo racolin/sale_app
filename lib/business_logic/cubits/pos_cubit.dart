@@ -30,6 +30,8 @@ class PosCubit extends Cubit<PosState> {
   bool isSelected(String id) => state.isSelected(id);
 
   bool addProduct(PosProductModel model) {
+    print(model.toMap());
+    print('model.toMap()');
     if (state.index != null &&
         state.index! >= 0 &&
         state.index! < state.listPos.length) {
@@ -116,9 +118,9 @@ class PosCubit extends Cubit<PosState> {
 
   List<String> get names => state.names;
 
-  void addNewTab([String? username, bool isMember = true]) {
-    if (username == null || username.isEmpty) {
-      username = 'Vãng lai';
+  void addNewTab([String? name, String? code]) {
+    if (name == null || name.isEmpty) {
+      name = 'Vãng lai';
     }
     var i = names.length;
     emit(
@@ -126,8 +128,8 @@ class PosCubit extends Cubit<PosState> {
         listPos: state.listPos +
             [
               PosModel(
-                memberCode: isMember ? username : null,
-                username: username,
+                memberCode: code,
+                username: name,
               ),
             ],
         index: i,

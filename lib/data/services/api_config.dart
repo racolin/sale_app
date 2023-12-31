@@ -22,7 +22,8 @@ class Environment {
     _devInstance ??= Environment._(
       base: 'api/v2/',
       // url: 'http://127.0.0.1/',
-      url: Platform.isAndroid ? 'http://10.0.2.2/' : 'http://127.0.0.1/',
+      url: Platform.isAndroid ? 'http://192.168.2.8/' : 'http://127.0.0.1/',
+      // url: Platform.isAndroid ? 'http://172.16.32.35:80/' : 'http://127.0.0.1/',
     );
     return _devInstance!;
   }

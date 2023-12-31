@@ -151,18 +151,11 @@ class ProductCubit extends Cubit<ProductState>
     return state.getProductOptionById(id);
   }
 
-  int? getCostOptionsItem(List<String> items) {
+  int? getCostOptionsItem(String productId, List<String> items) {
     if (this.state is! ProductLoaded) {
       return null;
     }
     var state = this.state as ProductLoaded;
-    int result = 0;
-    for (var id in items) {
-      var model = state.getProductOptionItemById(id);
-      if (model != null) {
-        result += model.cost;
-      }
-    }
-    return result;
+    return state.getCostOptionsItem(productId, items);
   }
 }

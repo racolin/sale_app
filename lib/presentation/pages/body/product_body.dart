@@ -9,9 +9,10 @@ import '../../../data/models/product_model.dart';
 import '../../widgets/product/product_widget.dart';
 
 class ProductBody extends StatefulWidget {
-
+  final Function(ProductModel) onClick;
   const ProductBody({
     Key? key,
+    required this.onClick,
   }) : super(key: key);
 
   @override
@@ -19,7 +20,6 @@ class ProductBody extends StatefulWidget {
 }
 
 class _ProductBodyState extends State<ProductBody> {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductCubit, ProductState>(
@@ -72,7 +72,11 @@ class _ProductBodyState extends State<ProductBody> {
             ),
           ),
         ),
-        ListView.builder(
+        GridView.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 150,
+            childAspectRatio: 5/8,
+          ),
           padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -81,6 +85,9 @@ class _ProductBodyState extends State<ProductBody> {
             child: ProductWidget(
               // height: 100
               model: shortProducts[index],
+              onClick: () {
+                widget.onClick(shortProducts[index]);
+              },
             ),
           ),
           itemCount: shortProducts.length,

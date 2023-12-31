@@ -67,6 +67,16 @@ class ProductLoaded extends ProductState {
     return null;
   }
 
+  int getCostOptionsItem(String productId, List<String> items) {
+    var lOps = _lists.fold([], (pre, e) => pre + e).firstWhere((e) => e.id == productId).optionIds;
+    var list = _listOption.where((e) => lOps.contains(e.id));
+    int cost = 0;
+    for (var i in list) {
+      cost += i.optionItems.fold(0, (pre, e) => pre + (items.contains(e.id) ? e.cost: 0));
+    }
+    return cost;
+  }
+
   List<ProductModel> getSearch(String? key) {
     return _lists
         .map(

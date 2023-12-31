@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/data/models/response_model.dart';
 
@@ -8,8 +6,7 @@ import '../../data/models/member_model.dart';
 import '../blocs/interval/interval_submit.dart';
 import '../states/member_state.dart';
 
-class MemberCubit extends Cubit<MemberState>
-    implements IntervalSubmit<MemberModel> {
+class MemberCubit extends Cubit<MemberState> implements IntervalSubmit<MemberModel> {
   final MemberRepository _repository;
 
   MemberCubit({
@@ -30,8 +27,11 @@ class MemberCubit extends Cubit<MemberState>
 
   @override
   Future<List<MemberModel>> submit([String? key]) async {
-
     var res = await _repository.searchMember(keyword: key);
     return res.data;
+  }
+
+  IntervalSubmit<MemberModel> getSubmit() {
+    return this;
   }
 }

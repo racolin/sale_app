@@ -296,7 +296,7 @@ class _ProductBottomSheetState extends State<ProductBottomSheet> {
                               ),
                             ),
                             onPressed: () async {
-                              context.read<PosCubit>().addProduct(
+                              bool res = context.read<PosCubit>().addProduct(
                                     PosProductModel(
                                       id: widget.product.id,
                                       name: widget.product.name,
@@ -305,6 +305,10 @@ class _ProductBottomSheetState extends State<ProductBottomSheet> {
                                       note: note ?? '',
                                     ),
                                   );
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(res ? "Thêm sản phẩm thành công!" : "Không thể thêm sản phẩm!")),
+                              );
                               Navigator.pop(context);
                             },
                             label: Text(

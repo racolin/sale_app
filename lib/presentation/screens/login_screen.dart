@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sale_app/business_logic/cubits/auth_cubit.dart';
-import 'package:sale_app/presentation/app_router.dart';
 import 'package:sale_app/presentation/dialogs/app_dialog.dart';
 import 'package:sale_app/presentation/res/dimen/dimens.dart';
 import 'package:sale_app/presentation/res/strings/values.dart';
@@ -22,24 +21,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(top: 56),
-          child: Column(
-            children: [
-              ClipRRect(
-                child: Image.asset(
-                  'assets/images/background_auth.jpg',
-                  height: 360,
-                  width: double.maxFinite,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
+      body: SizedBox(
+        height: double.maxFinite,
+        width: double.maxFinite,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
                 padding: const EdgeInsets.all(spaceMD),
                 width: double.maxFinite,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(
                       height: spaceXL,
@@ -190,8 +184,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Image.asset(
+                'assets/images/login_bg.jpeg',
+                width: double.maxFinite,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -4,24 +4,13 @@ import 'package:sale_app/business_logic/cubits/auth_cubit.dart';
 import 'package:sale_app/business_logic/states/auth_state.dart';
 import 'package:sale_app/presentation/app_router.dart';
 import 'package:sale_app/presentation/pages/support/alert_page.dart';
-import 'package:sale_app/presentation/screens/home_screen.dart';
+import 'package:sale_app/presentation/screens/feature_screen.dart';
 import 'package:sale_app/presentation/screens/login_screen.dart';
 import 'package:sale_app/presentation/screens/splash_screen.dart';
 
 import '../business_logic/cubits/internet_cubit.dart';
-import 'business_logic/cubits/cart_cubit.dart';
-import 'business_logic/cubits/home_cubit.dart';
-import 'business_logic/cubits/pos_cubit.dart';
-import 'business_logic/cubits/product_cubit.dart';
 import 'business_logic/repositories/auth_repository.dart';
-import 'business_logic/repositories/cart_repository.dart';
-import 'business_logic/repositories/pos_repository.dart';
-import 'business_logic/repositories/product_repository.dart';
 import 'data/repositories/api/auth_api_repository.dart';
-import 'data/repositories/api/cart_api_repository.dart';
-import 'data/repositories/api/pos_api_repository.dart';
-import 'data/repositories/mock/pos_mock_repository.dart';
-import 'data/repositories/api/product_api_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -121,53 +110,7 @@ class MyApp extends StatelessWidget {
                         case AuthNoLogin:
                           return const LoginScreen();
                         case AuthLogin:
-                          return MultiRepositoryProvider(
-                            providers: [
-                              RepositoryProvider<ProductRepository>(
-                                create: (context) => ProductApiRepository(),
-                              ),
-                              RepositoryProvider<CartRepository>(
-                                create: (context) => CartApiRepository(),
-                              ),
-                              RepositoryProvider<PosRepository>(
-                                create: (context) => PosApiRepository(),
-                              ),
-                            ],
-                            child: MultiBlocProvider(
-                              providers: [
-                                BlocProvider<HomeCubit>(
-                                  create: (context) => HomeCubit(),
-                                ),
-                                BlocProvider<ProductCubit>(
-                                  create: (context) => ProductCubit(
-                                    repository: RepositoryProvider.of<
-                                        ProductRepository>(
-                                      context,
-                                    ),
-                                  ),
-                                ),
-                                BlocProvider<CartCubit>(
-                                  lazy: false,
-                                  create: (context) => CartCubit(
-                                    repository:
-                                        RepositoryProvider.of<CartRepository>(
-                                      context,
-                                    ),
-                                  ),
-                                ),
-                                BlocProvider<PosCubit>(
-                                  lazy: false,
-                                  create: (context) => PosCubit(
-                                    repository:
-                                        RepositoryProvider.of<PosRepository>(
-                                      context,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              child: const HomeScreen(),
-                            ),
-                          );
+                          return const FeatureScreen();
                       }
                       return const AlertPage(
                         icon: Icon(Icons.ac_unit),
